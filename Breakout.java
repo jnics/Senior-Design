@@ -178,7 +178,7 @@ public class Breakout extends Applet implements Runnable {
 	   of this breakout program */
 
 	public void win() {
-		showStatus("Congradulations Ben!");
+		showStatus("Congradulations From Group 3!");
 		gContext.setColor(Breakout.BACKGROUND);
 		gContext.fillRect(0,0,MAXX,MAXY);
 		repaint();
