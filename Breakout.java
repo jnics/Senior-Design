@@ -20,7 +20,7 @@ public class Breakout extends Applet implements Runnable {
 		PADDLEWIDTH = 40, PADDLEHEIGHT = 10, PADDLEALTITUDE = MAXY - 20, 
 		LATSPEED = 3, BLOCKSPACINGY = 2, BLOCKSPACINGX = 2,
                 LIVES = 3;
-	public static final double INITSPEED_X = 2.5, INITSPEED_Y = -2.5, 
+	public static final double INITSPEED_X = 1.25, INITSPEED_Y = -1.25, 
 		XHIT_CHANGE = 0.4, YHIT_CHANGE = 0.2;
 	public static final Color PADDLECOLOR = randomColorGen(), 
 		BALLCOLOR = randomColorGen();
@@ -260,12 +260,12 @@ class BlockHolder {
 	   each line with the proper hight and colors of blocks. */
 	public void prepareBlocks() {
 		int spacing = Breakout.BLOCKSPACINGY;
-		lines[0] = new Line(0, randomColorGen());
-		lines[1] = new Line(TARGETHEIGHT+spacing, randomColorGen());
-		lines[2] = new Line(TARGETHEIGHT*2+2*spacing, randomColorGen());
-		lines[3] = new Line(TARGETHEIGHT*3+3*spacing, randomColorGen());
-		lines[4] = new Line(TARGETHEIGHT*4+4*spacing, randomColorGen());
-		lines[5] = new Line(TARGETHEIGHT*5+5*spacing, randomColorGen());
+		lines[0] = new Line(0,  Breakout.randomColorGen());
+		lines[1] = new Line(TARGETHEIGHT+spacing, Breakout.randomColorGen());
+		lines[2] = new Line(TARGETHEIGHT*2+2*spacing, Breakout.randomColorGen());
+		lines[3] = new Line(TARGETHEIGHT*3+3*spacing, Breakout.randomColorGen());
+		lines[4] = new Line(TARGETHEIGHT*4+4*spacing, Breakout.randomColorGen());
+		lines[5] = new Line(TARGETHEIGHT*5+5*spacing, Breakout.randomColorGen());
 		
 		for(int i = 0; i < lines.length; i++) {
 			blockCount += lines[i].numberblocks;
