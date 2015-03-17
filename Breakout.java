@@ -382,7 +382,7 @@ class Block {
 
 	/* Erases the block, by making it the color of the background */
 	public void clear(Graphics g) {
-		g.setColor(Breakout.randomColorGen());
+		g.setColor(Breakout.BACKGROUND);
 		g.fillRect(x, y, MAXX, MAXY);
 	}
 
