@@ -1,4 +1,3 @@
-
 import java.awt.*;
 import java.applet.*;
 import java.lang.Math;
@@ -6,9 +5,10 @@ import java.net.InetAddress;
 import java.util.Random;
 
 
-/*Here is group 3 code for designing the breakout game. we tried to make the names 
-for each variable simple as possible. 
- */
+/* Here is the code for my Breakout Game, I tried to make the names
+   of the final variables as obvious as possible. To make slight
+   changes in the game, it is easiest to simply change these 
+   parameters. */
 public class Breakout extends Applet implements Runnable {
 	/**
 	 * 
@@ -19,15 +19,16 @@ public class Breakout extends Applet implements Runnable {
 		PADDLEWIDTH = 40, PADDLEHEIGHT = 10, PADDLEALTITUDE = MAXY - 20, 
 		LATSPEED = 3, BLOCKSPACINGY = 2, BLOCKSPACINGX = 2,
                 LIVES = 3;
-	public static final double INITSPEED_X = 2.5, INITSPEED_Y = -2.5, 
+	public static final double INITSPEED_X = 1.25, INITSPEED_Y = -1.25, 
 		XHIT_CHANGE = 0.4, YHIT_CHANGE = 0.2;
 	public static final Color PADDLECOLOR = randomColorGen(), 
 		BALLCOLOR = randomColorGen();
-	public static final Color BACKGROUND = randomColorGen();
+	public static final Color BACKGROUND = randomColorGen(), TEXTCOLOR = randomColorGen();
 	public static final String BEEP_SOUND = "beep.au"; 
 
 	private boolean paused = false;
 	private int numberlost = 0;
+	static int score;
 	private Graphics gContext;
 	private Image buffer;
 	private Thread animate;
@@ -37,8 +38,8 @@ public class Breakout extends Applet implements Runnable {
 	private AudioClip hitsound;
 	private Paddle paddle;
 
-/* this section of code starts up the Breakout Game and creates
-the blocks,paddle, and box in the graffic buffer. */
+/* Prepares the game to be played and draws the blocks, paddle, and box 
+   in the graphics buffer */
 	public void init() {
 		hitsound = getAudioClip(getDocumentBase(), BEEP_SOUND);
 		hitsound.play();
@@ -54,7 +55,7 @@ the blocks,paddle, and box in the graffic buffer. */
 		blocks.draw(gContext);
 	}
 
-	/* This method is for starting the game's thread */
+	/* Necessary method for starting the game's thread */
 	public void start() {
 		if(animate == null) {
 			animate = new Thread(this);
@@ -93,7 +94,7 @@ the blocks,paddle, and box in the graffic buffer. */
 		} catch(Exception e) {};
 
 		while(true) {
-			paddle.clear(gContext);
+			paddle.clearPaddle(gContext);
 			ball.clear(gContext);
 
 			if(leftArrow) {
@@ -140,7 +141,7 @@ the blocks,paddle, and box in the graffic buffer. */
 
 	public boolean keyDown(Event e, int key) {
 		if(key == 1004 && ballready) {
-			showStatus("Press P to pause");
+			showStatus("Press P to pause. Score: " + Breakout.score);
 			ballready = false;
 			ball.xchange = INITSPEED_X;
 			ball.ychange = INITSPEED_Y;
@@ -149,10 +150,10 @@ the blocks,paddle, and box in the graffic buffer. */
 			if(!paused) {
 				paused = true;
 				animate.suspend();
-				showStatus("Press P to unpause");
+				showStatus("Press P to unpause Score: " + Breakout.score);
 			}
 			else {
-				showStatus("Press P to pause");
+				showStatus("Press P to pause Score: " + Breakout.score);
 				paused = false;
 				animate.resume();
 			}	
@@ -177,7 +178,7 @@ the blocks,paddle, and box in the graffic buffer. */
 	   of this breakout program */
 
 	public void win() {
-		showStatus("Congradulations From Group 3!");
+		showStatus("Congradulations From Group 3! Your score was: " + score);
 		gContext.setColor(Breakout.BACKGROUND);
 		gContext.fillRect(0,0,MAXX,MAXY);
 		repaint();
@@ -189,9 +190,9 @@ the blocks,paddle, and box in the graffic buffer. */
 	public void lose() {
 		if(numberlost < LIVES) {
 			numberlost++;
-			showStatus("Try Again");
+			showStatus("Try Again. Your score was: " + score);
 			gContext.setColor(Breakout.BACKGROUND);
-			paddle.clear(gContext);
+			paddle.clearPaddle(gContext);
 			ball.clear(gContext);
 			paddle.go(MAXX / 2 - 20, PADDLEALTITUDE);
 			ball.go(MAXX / 2 - BALLSIZE, PADDLEALTITUDE - 5);
@@ -199,7 +200,7 @@ the blocks,paddle, and box in the graffic buffer. */
 		}
 		else {
 			numberlost = 0;
-			showStatus("You Lose");
+			showStatus("You Lose.  Your score was: " + score);
 			gContext.setColor(Breakout.BACKGROUND);
 			gContext.fillRect(0,0,MAXX, MAXY);
 			paddle.go(MAXX / 2 - 20, PADDLEALTITUDE);
@@ -259,12 +260,12 @@ class BlockHolder {
 	   each line with the proper hight and colors of blocks. */
 	public void prepareBlocks() {
 		int spacing = Breakout.BLOCKSPACINGY;
-		lines[0] = new Line(0, randomColorGen());
-		lines[1] = new Line(TARGETHEIGHT+spacing, randomColorGen());
-		lines[2] = new Line(TARGETHEIGHT*2+2*spacing, randomColorGen());
-		lines[3] = new Line(TARGETHEIGHT*3+3*spacing, randomColorGen());
-		lines[4] = new Line(TARGETHEIGHT*4+4*spacing, randomColorGen());
-		lines[5] = new Line(TARGETHEIGHT*5+5*spacing, randomColorGen());
+		lines[0] = new Line(0, Breakout.randomColorGen());
+		lines[1] = new Line(TARGETHEIGHT+spacing, Breakout.randomColorGen());
+		lines[2] = new Line(TARGETHEIGHT*2+2*spacing, Breakout.randomColorGen());
+		lines[3] = new Line(TARGETHEIGHT*3+3*spacing, Breakout.randomColorGen());
+		lines[4] = new Line(TARGETHEIGHT*4+4*spacing, Breakout.randomColorGen());
+		lines[5] = new Line(TARGETHEIGHT*5+5*spacing, Breakout.randomColorGen());
 		
 		for(int i = 0; i < lines.length; i++) {
 			blockCount += lines[i].numberblocks;
@@ -308,7 +309,7 @@ class Line {
 	public Block[] blocks;
 	private boolean[] exists;
 	private int TARGETLENGTH;
-	private Color color = randomColorGen();
+	private Color color = Color.CYAN;
 
 	/* Prepares a Line of blocks, starting at hight top0, and
 	   with the color color0 */
@@ -379,9 +380,16 @@ class Block {
 		MAXY = Breakout.TARGETHEIGHT - Breakout.BLOCKSPACINGY / 2;
 	}
 
-	/* Erases the block, by making it the color of the background */
-	public void clear(Graphics g) {
-		g.setColor(Breakout.randomColorGen());
+	/* Erases the block, by making it the color of the background and keeping score of each hit */
+	public void clearBlock(Graphics g) {
+		g.setColor(Breakout.BACKGROUND);
+		Breakout.score++;
+		g.fillRect(x, y, MAXX, MAXY);
+	}
+	
+	/* clears the paddle so as we move the previous position the paddle was in is now the background color */
+	public void clearPaddle(Graphics g) {
+		g.setColor(Breakout.BACKGROUND);
 		g.fillRect(x, y, MAXX, MAXY);
 	}
 
@@ -514,7 +522,7 @@ class Ball {
 		Block hit = blocks.whohit((int) (x + xchange), (int) (y + ychange));
 	
 		if(hit != null) {
-			hit.clear(g);
+			hit.clearBlock(g);
 			beep.play();
 			ychange = -ychange;
 		}
