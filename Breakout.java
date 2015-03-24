@@ -6,8 +6,8 @@ import java.net.InetAddress;
 import java.util.Random;
 
 
-/* Here is the code for my Breakout Game, I tried to make the names
-   of the final variables as obvious as possible. To make slight
+/* Here is the code for Group #3 Breakout Game, we tried to make the names
+   of the variables simple as possible. To make slight
    changes in the game, it is easiest to simply change these 
    parameters. */
 public class Breakout extends Applet implements Runnable {
@@ -38,7 +38,7 @@ public class Breakout extends Applet implements Runnable {
 	private AudioClip hitsound;
 	private Paddle paddle;
 
-/* Prepares the game to be played and draws the blocks, paddle, and box 
+/*starts the game and create the blocks, paddle, and box 
    in the graphics buffer */
 	public void init() {
 		hitsound = getAudioClip(getDocumentBase(), BEEP_SOUND);
