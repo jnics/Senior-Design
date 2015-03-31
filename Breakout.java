@@ -183,6 +183,7 @@ public class Breakout extends Applet implements Runnable {
 		gContext.fillRect(0,0,MAXX,MAXY);
 		repaint();
 		animate.stop();
+		tipWindow(tips());
 		score = 0;
 	}
 
@@ -209,8 +210,8 @@ public class Breakout extends Applet implements Runnable {
 			blocks.restart();
 			blocks.draw(gContext);
 			ballready = true;
-			score = 0;
 			tipWindow(tips());
+			score = 0;
 		}
 	}
 	
