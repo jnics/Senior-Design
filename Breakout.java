@@ -183,6 +183,7 @@ public class Breakout extends Applet implements Runnable {
 		gContext.fillRect(0,0,MAXX,MAXY);
 		repaint();
 		animate.stop();
+		score = 0;
 	}
 
 	/* This method is called when you lose, and the game must be
@@ -208,7 +209,22 @@ public class Breakout extends Applet implements Runnable {
 			blocks.restart();
 			blocks.draw(gContext);
 			ballready = true;
+			score = 0;
+			tipWindow(tips());
 		}
+	}
+	
+	// Message box to display tips
+	public void tipWindow(String[] s){
+		JOptionPane.showMessageDialog(null, s[0] + "\n" + s[1]);
+	}
+	
+	// where tips can be added to an array
+	public String[] tips(){
+		String[] s = new String[5];
+		s[0] = "Hi from Group 3";
+		s[1] = "Also Tacos";
+		return s;
 	}
 
 	public boolean getLeftArrow() {
