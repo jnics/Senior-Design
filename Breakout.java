@@ -5,10 +5,8 @@ import java.net.InetAddress;
 import java.util.Random;
 
 
-/* Here is the code for my Breakout Game, I tried to make the names
-   of the final variables as obvious as possible. To make slight
-   changes in the game, it is easiest to simply change these 
-   parameters. */
+/* Here is the code for Group #3 Breakout Game, we tried to make the names
+   of the variables simple as possible. */
 public class Breakout extends Applet implements Runnable {
 	
 	
@@ -38,7 +36,7 @@ public class Breakout extends Applet implements Runnable {
 	private AudioClip hitsound;
 	private Paddle paddle;
 
-/* Prepares the game to be played and draws the blocks, paddle, and box 
+/*starts the game and create the blocks, paddle, and box 
    in the graphics buffer */
 	public void init() {
 		hitsound = getAudioClip(getDocumentBase(), BEEP_SOUND);
@@ -132,12 +130,11 @@ public class Breakout extends Applet implements Runnable {
 		paint(g);
 	}
 
-	/* When a key is pressed keyDown is called by the OS, keyDown
-	   checks to see which key was pressed, and if the key was 
-       the up arrow (#1004), and the ball is on the paddle, then the 
-	   game starts. If the key was the left arrow (#1006) or right 
-	   arrow (#1007) the paddle is moved, and if it was the 'P' key
-	   (#104), then the game is paused. */
+	/* In this method the different keys represent certain aspects of the game 
+	   controle if you press the up arrow key (#1004), and the ball is on the paddle, 
+	   then the game starts. If you press the left arrow key  (#1006) or right 
+	   arrow key (#1007) then paddle is moved in the direction of the key, and if 
+	   it was the 'P' key (#104), then the game is paused.*/
 
 	public boolean keyDown(Event e, int key) {
 		if(key == 1004 && ballready) {
@@ -175,14 +172,18 @@ public class Breakout extends Applet implements Runnable {
 	}
 
 	/* This method is called when you win the first and only level
-	   of this breakout program */
+	   of the breakout game */
 
 	public void win() {
+<<<<<<< HEAD
 <<<<<<< HEAD
 		showStatus("Congradulations Ben!");
 		gContext.setColor(BACKGROUND);
 =======
 		showStatus("Congradulations From Group 3! Your score was: " + score);
+=======
+		showStatus("Congradulations From Group 3!!!");
+>>>>>>> master
 		gContext.setColor(Breakout.BACKGROUND);
 >>>>>>> origin/CIS457
 		gContext.fillRect(0,0,MAXX,MAXY);
@@ -198,8 +199,13 @@ public class Breakout extends Applet implements Runnable {
 		if(numberlost < LIVES) {
 			numberlost++;
 <<<<<<< HEAD
+<<<<<<< HEAD
 			showStatus("Try Again");
 			gContext.setColor(BACKGROUND);
+=======
+			showStatus("You Lose, Try Again");
+			gContext.setColor(Breakout.BACKGROUND);
+>>>>>>> master
 			paddle.clear(gContext);
 =======
 			showStatus("Try Again. Your score was: " + score);
@@ -288,7 +294,11 @@ class BlockHolder {
 	   each line with the proper hight and colors of blocks. */
 	public void prepareBlocks() {
 		int spacing = Breakout.BLOCKSPACINGY;
+<<<<<<< HEAD
 		lines[0] = new Line(0, Breakout.randomColorGen());
+=======
+		lines[0] = new Line(0,  Breakout.randomColorGen());
+>>>>>>> master
 		lines[1] = new Line(TARGETHEIGHT+spacing, Breakout.randomColorGen());
 		lines[2] = new Line(TARGETHEIGHT*2+2*spacing, Breakout.randomColorGen());
 		lines[3] = new Line(TARGETHEIGHT*3+3*spacing, Breakout.randomColorGen());
@@ -316,7 +326,7 @@ class BlockHolder {
 		return null;
 	}
 
-	/* Is called by the init method of the Breakout program to draw
+	/* Is called by the init method of the Breakout game to draw
 	   the blocks into the graphics buffer */
 	public void draw(Graphics g) {
 		for(int i = 0; i < lines.length; i++)
@@ -411,6 +421,7 @@ class Block {
 <<<<<<< HEAD
 	/* Erases the block, by making it the color of the background */
 	public void clear(Graphics g) {
+<<<<<<< HEAD
 =======
 	/* Erases the block, by making it the color of the background and keeping score of each hit */
 	public void clearBlock(Graphics g) {
@@ -422,6 +433,8 @@ class Block {
 	/* clears the paddle so as we move the previous position the paddle was in is now the background color */
 	public void clearPaddle(Graphics g) {
 >>>>>>> origin/CIS457
+=======
+>>>>>>> master
 		g.setColor(Breakout.BACKGROUND);
 		g.fillRect(x, y, MAXX, MAXY);
 	}
@@ -450,8 +463,8 @@ class Block {
 
 }
 	
-/* This class has only one use, to make the paddle, it works a lot like
-   a block, but also has movement methods */ 
+/* This class makes the paddle, it works similar to 
+   the block class, but also has movement methods */ 
 class Paddle extends Block {
 	public boolean moved = false;
 
@@ -482,9 +495,10 @@ class Paddle extends Block {
 
 }
 
-/* This class creates that wonderful bouncing ball, that is so essential
-   to breakout. It not only draws the ball, but also moves it and works 
-   with the BlockHolder to erase the blocks as they are hit. */
+/* This class creates the most important part to the Breakout game the ball, 
+   this class draws the ball, moves the ball  and also works with the BlockHolder to erase 
+   the blocks the ball hits.  */
+   
 class Ball {
 	public double xchange, ychange;
 	private double x, y;
