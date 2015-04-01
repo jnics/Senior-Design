@@ -11,9 +11,9 @@ import java.util.Random;
    changes in the game, it is easiest to simply change these 
    parameters. */
 public class Breakout extends Applet implements Runnable {
-	/**
-	 * 
-	 */
+	
+	
+	
 	private static final long serialVersionUID = 1L;
 	public static final int MAXY = 320, MAXX = 320, SLEEPTIME = 5, 
 		BALLSIZE = 5, TARGETLENGTH = 40, TARGETHEIGHT = 10, 
@@ -179,7 +179,7 @@ public class Breakout extends Applet implements Runnable {
 
 	public void win() {
 		showStatus("Congradulations Ben!");
-		gContext.setColor(Breakout.BACKGROUND);
+		gContext.setColor(BACKGROUND);
 		gContext.fillRect(0,0,MAXX,MAXY);
 		repaint();
 		animate.stop();
@@ -191,7 +191,7 @@ public class Breakout extends Applet implements Runnable {
 		if(numberlost < LIVES) {
 			numberlost++;
 			showStatus("Try Again");
-			gContext.setColor(Breakout.BACKGROUND);
+			gContext.setColor(BACKGROUND);
 			paddle.clear(gContext);
 			ball.clear(gContext);
 			paddle.go(MAXX / 2 - 20, PADDLEALTITUDE);
@@ -382,7 +382,7 @@ class Block {
 
 	/* Erases the block, by making it the color of the background */
 	public void clear(Graphics g) {
-		g.setColor(Breakout.randomColorGen());
+		g.setColor(Breakout.BACKGROUND);
 		g.fillRect(x, y, MAXX, MAXY);
 	}
 
