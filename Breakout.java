@@ -175,17 +175,11 @@ public class Breakout extends Applet implements Runnable {
 	   of the breakout game */
 
 	public void win() {
-<<<<<<< HEAD
-<<<<<<< HEAD
 		showStatus("Congradulations Ben!");
 		gContext.setColor(BACKGROUND);
-=======
 		showStatus("Congradulations From Group 3! Your score was: " + score);
-=======
 		showStatus("Congradulations From Group 3!!!");
->>>>>>> master
 		gContext.setColor(Breakout.BACKGROUND);
->>>>>>> origin/CIS457
 		gContext.fillRect(0,0,MAXX,MAXY);
 		repaint();
 		animate.stop();
@@ -198,20 +192,14 @@ public class Breakout extends Applet implements Runnable {
 	public void lose() {
 		if(numberlost < LIVES) {
 			numberlost++;
-<<<<<<< HEAD
-<<<<<<< HEAD
 			showStatus("Try Again");
 			gContext.setColor(BACKGROUND);
-=======
 			showStatus("You Lose, Try Again");
 			gContext.setColor(Breakout.BACKGROUND);
->>>>>>> master
 			paddle.clear(gContext);
-=======
 			showStatus("Try Again. Your score was: " + score);
 			gContext.setColor(Breakout.BACKGROUND);
 			paddle.clearPaddle(gContext);
->>>>>>> origin/CIS457
 			ball.clear(gContext);
 			paddle.go(MAXX / 2 - 20, PADDLEALTITUDE);
 			ball.go(MAXX / 2 - BALLSIZE, PADDLEALTITUDE - 5);
@@ -294,11 +282,8 @@ class BlockHolder {
 	   each line with the proper hight and colors of blocks. */
 	public void prepareBlocks() {
 		int spacing = Breakout.BLOCKSPACINGY;
-<<<<<<< HEAD
 		lines[0] = new Line(0, Breakout.randomColorGen());
-=======
 		lines[0] = new Line(0,  Breakout.randomColorGen());
->>>>>>> master
 		lines[1] = new Line(TARGETHEIGHT+spacing, Breakout.randomColorGen());
 		lines[2] = new Line(TARGETHEIGHT*2+2*spacing, Breakout.randomColorGen());
 		lines[3] = new Line(TARGETHEIGHT*3+3*spacing, Breakout.randomColorGen());
@@ -418,11 +403,8 @@ class Block {
 		MAXY = Breakout.TARGETHEIGHT - Breakout.BLOCKSPACINGY / 2;
 	}
 
-<<<<<<< HEAD
 	/* Erases the block, by making it the color of the background */
 	public void clear(Graphics g) {
-<<<<<<< HEAD
-=======
 	/* Erases the block, by making it the color of the background and keeping score of each hit */
 	public void clearBlock(Graphics g) {
 		g.setColor(Breakout.BACKGROUND);
@@ -432,9 +414,6 @@ class Block {
 	
 	/* clears the paddle so as we move the previous position the paddle was in is now the background color */
 	public void clearPaddle(Graphics g) {
->>>>>>> origin/CIS457
-=======
->>>>>>> master
 		g.setColor(Breakout.BACKGROUND);
 		g.fillRect(x, y, MAXX, MAXY);
 	}
