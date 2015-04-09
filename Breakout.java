@@ -4,19 +4,29 @@ import java.lang.Math;
 import java.net.InetAddress;
 import java.util.Random;
 
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
-/* Here is the code for Group #3 Breakout Game, we tried to make the names
-   of the variables simple as possible. */
+
 public class Breakout extends Applet implements Runnable {
-	
-	
-	
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
-	public static final int MAXY = 320, MAXX = 320, SLEEPTIME = 5, 
-		BALLSIZE = 5, TARGETLENGTH = 40, TARGETHEIGHT = 10, 
-		PADDLEWIDTH = 40, PADDLEHEIGHT = 10, PADDLEALTITUDE = MAXY - 20, 
-		LATSPEED = 3, BLOCKSPACINGY = 2, BLOCKSPACINGX = 2,
-                LIVES = 3;
+	public static int MAXY = 500;
+	public static int MAXX = 720;
+	public static final int SLEEPTIME = 5;
+	public static final int BALLSIZE = 5;
+	public static final int TARGETLENGTH = 40;
+	public static final int TARGETHEIGHT = 10;
+	public static final int PADDLEWIDTH = 40;
+	public static final int PADDLEHEIGHT = 10;
+	public static final int PADDLEALTITUDE = MAXY - 20;
+	public static final int LATSPEED = 3;
+	public static final int BLOCKSPACINGY = 2;
+	public static final int BLOCKSPACINGX = 2;
+	public static final int LIVES = 3;
 	public static final double INITSPEED_X = 1.25, INITSPEED_Y = -1.25, 
 		XHIT_CHANGE = 0.4, YHIT_CHANGE = 0.2;
 	public static final Color PADDLECOLOR = randomColorGen(), 
@@ -36,11 +46,12 @@ public class Breakout extends Applet implements Runnable {
 	private AudioClip hitsound;
 	private Paddle paddle;
 
-/*starts the game and create the blocks, paddle, and box 
-   in the graphics buffer */
+
 	public void init() {
 		hitsound = getAudioClip(getDocumentBase(), BEEP_SOUND);
 		hitsound.play();
+		
+		
 		buffer = createImage(MAXX, MAXY);
 		gContext = buffer.getGraphics();
 		gContext.setColor(BACKGROUND);
@@ -53,14 +64,14 @@ public class Breakout extends Applet implements Runnable {
 		blocks.draw(gContext);
 	}
 
-	/* Necessary method for starting the game's thread */
+	
 	public void start() {
 		if(animate == null) {
 			animate = new Thread(this);
 			animate.start();
 		}
 	}
-
+	
 	public void restart() {	}
 		
 	public void stop() {
@@ -70,21 +81,20 @@ public class Breakout extends Applet implements Runnable {
 		}
 	}
 
-	/* Paints the graphics buffer onto the screen */
+	
 	public void paint(Graphics g) {
+		super.paint(g);
 		try {
-			g.drawImage(buffer, 0, 0, this);
+			/*Toolkit toolkit =  Toolkit.getDefaultToolkit ();
+			Dimension dim = toolkit.getScreenSize();
+			MAXX = (int) dim.getWidth();
+			MAXY = (int) dim.getHeight();*/
+			g.drawImage(buffer, 0, 0, MAXX, MAXY, this);
 		}
 		catch(Exception e) {}
 	}
 
-	/* This method clears the paddle and ball from the buffer.
-	   Checks to see if any blocks have been hit, then redraws
-	   the screen as it should now be drawn. Since the ball is
-	   drawn as a point, but is actually a few pixels in radius, 
-	   blocks will sometimes be partially cleared, but not broken.
-	   Once the drawing is in the buffer, the thread sleeps for 
-	   the time set in SLEEPTIME, before moving the ball once more */
+	
 	public void run() {
 		//showStatus("Click on Field to Play");
 		try {
@@ -130,11 +140,6 @@ public class Breakout extends Applet implements Runnable {
 		paint(g);
 	}
 
-	/* In this method the different keys represent certain aspects of the game 
-	   controle if you press the up arrow key (#1004), and the ball is on the paddle, 
-	   then the game starts. If you press the left arrow key  (#1006) or right 
-	   arrow key (#1007) then paddle is moved in the direction of the key, and if 
-	   it was the 'P' key (#104), then the game is paused.*/
 
 	public boolean keyDown(Event e, int key) {
 		if(key == 1004 && ballready) {
@@ -162,7 +167,7 @@ public class Breakout extends Applet implements Runnable {
 		return true;
 	}
 
-	/* Stops moving the paddle, if one of the arrows was down */
+
 	public boolean keyUp(Event e, int key) {
 		if(key == 1006)
 			leftArrow = false;
@@ -171,14 +176,9 @@ public class Breakout extends Applet implements Runnable {
 		return true;
 	}
 
-	/* This method is called when you win the first and only level
-	   of the breakout game */
 
 	public void win() {
-		showStatus("Congradulations Ben!");
-		gContext.setColor(BACKGROUND);
 		showStatus("Congradulations From Group 3! Your score was: " + score);
-		showStatus("Congradulations From Group 3!!!");
 		gContext.setColor(Breakout.BACKGROUND);
 		gContext.fillRect(0,0,MAXX,MAXY);
 		repaint();
@@ -187,16 +187,10 @@ public class Breakout extends Applet implements Runnable {
 		score = 0;
 	}
 
-	/* This method is called when you lose, and the game must be
-	reinitialized */
+
 	public void lose() {
 		if(numberlost < LIVES) {
 			numberlost++;
-			showStatus("Try Again");
-			gContext.setColor(BACKGROUND);
-			showStatus("You Lose, Try Again");
-			gContext.setColor(Breakout.BACKGROUND);
-			paddle.clear(gContext);
 			showStatus("Try Again. Your score was: " + score);
 			gContext.setColor(Breakout.BACKGROUND);
 			paddle.clearPaddle(gContext);
@@ -222,14 +216,99 @@ public class Breakout extends Applet implements Runnable {
 	
 	// Message box to display tips
 	public void tipWindow(String[] s){
-		JOptionPane.showMessageDialog(null, s[0] + "\n" + s[1]);
+		JTextArea text = new JTextArea();
+		if(score >= 0 && score < 10){
+			text = new JTextArea(s[0] + "\n" + s[1] +  "\n" + s[2] + "\n" + s[3]);
+			scrollPane(text);
+		}
+		else if (score > 9 && score < 20){
+			text = new JTextArea( s[0] + "\n" + s[1] + "\n" + s[2] + "\n" + s[3] + "\n" + s[4]);
+			scrollPane(text);
+		}
+		else if (score > 19 && score < 30){
+			text = new JTextArea(s[0] + "\n" + s[1] + "\n" +  s[2] + "\n" + s[3] + "\n" + s[4] + "\n" + s[5]);
+			scrollPane(text);
+		}
+		else if (score > 29 && score < 40){
+			text = new JTextArea( s[0] + "\n" + s[1] + "\n" + s[2] + "\n" + s[3] + "\n" + s[4] + "\n" + s[5]+ "\n" + s[6]);
+			scrollPane(text);
+		}
+		else{
+			text = new JTextArea(s[0] + "\n" + s[1] + "\n" + s[2] + "\n" + s[3] + "\n" + s[4] + "\n" + s[5]+ "\n" + s[6] + "\n" + s[7]);
+			scrollPane(text);
+		}
 	}
 	
+	
+	
+	public void scrollPane(JTextArea textArea){
+		JScrollPane scrollPane = new JScrollPane(textArea);  
+		textArea.setLineWrap(true);  
+		textArea.setWrapStyleWord(true); 
+		scrollPane.setPreferredSize( new Dimension( MAXX, MAXY ) );
+		JOptionPane.showMessageDialog(null, scrollPane, "Cleveland State CIS Dept. Info",  
+		                                       JOptionPane.INFORMATION_MESSAGE);
+	}
 	// where tips can be added to an array
 	public String[] tips(){
-		String[] s = new String[5];
-		s[0] = "Hi from Group 3";
-		s[1] = "Also Tacos";
+		String[] s = new String[8];
+
+s[0] = ("BSCIS Admission Requirements\n" +
+		        
+
+	">Students may declare CIS as their major as soon as they have met the program’s admission requirements:\n"+
+
+	">A 2.0 grade point average overall.\n "+
+	">A grade of C or better in MTH 181, or an average of C+ in MTH 148-149.\n "+
+	">A grade of C+ or better in CIS 260.\n"+
+	">Submit an official Declaration of Major form in the Office of Undergraduate Advising, BU 219.\n"+
+	">The curriculum reflects current computing trends and incorporates current topics to enable a CIS graduate to be competitive in the marketplace\n\n");
+
+
+
+		s[1] = ("Two tracks are offered under the BSCIS degree\n"+
+		     "   _____________________________________________\n\n"+
+	"The CIS track is designed for students interested in incorporating an application area in their degree program.\n"+
+	"The CSC track is designed for students interested in theoretical and quantitative foundations of CS.\n\n");
+
+
+
+		s[2] = ("Random CIS facts\n"+
+		        "________________\n\n"+
+				" CSU offers a Co-op program that help gets CIS/IST majors experience in the workforce and possible permanent job opportunities after graduation.\n"+
+                 "Computer Science focuses on teaching programming and computing.");
+		
+		s[3] = ("Careers you can peruse with a CIS & IST degree Part 1\n"+
+               
+
+               "	Application Developer\n"+
+               	"Digital Energy ERP Project Manager\n"+
+			   "	IT Consultant\n"+
+			   "	IT Support Specialist\n"+
+			   	"Programmer/Analyst\n");
+			 
+
+		s[4] = ("Careers you can peruse with a CIS & IST degree Part 2\n"+
+               " ______________________________________________\n\n"+
+			   	"Project Manager\n"+
+			   	"Quality Assurance Specialist\n"+
+		       	"Setup Configuration Specialist\n"+
+			   	"Information Management Leadership Program\n"+
+			   	"Infrastructure Architect\n");
+
+
+
+		s[5] = "Computer Information Systems (CIS) has an average starting salary of $49,100 and an average mid-career income of $85,965\n";
+
+		s[6] = "Computer Information System is defined as the study of interconnected networks of hardware and software which companies use to collect, filter, process and build data.\n "; 
+
+		s[7] = (" Fun Facts about CSU CIS & IST Department Staff\n"+
+		         "______________________________________________\n\n "+
+				"   Dr. Henry has a boat named SEA ++ \n"+
+				"Professor Ardnt use to teach in Italy\n"+ 
+				 "Professor Dolah use to work for IBM\n"+
+		        " Professor H. Wang Likes to Compete in programming competitions\n"+
+		        " Dr. Blake is a certified level 1 snowboard instruct"); 
 		return s;
 	}
 
@@ -241,9 +320,7 @@ public class Breakout extends Applet implements Runnable {
 		return rightArrow;
 	}
 	
-	/* newly added code creates a random color for any item that uses color
-	 This code is to be used through out calls to the color class
-	 */
+
 	public static Color randomColorGen() {
 		Random rand = new Random();
 		int red = rand.nextInt(255);
@@ -254,9 +331,6 @@ public class Breakout extends Applet implements Runnable {
 }
 
 
-/* This class represents the group of blocks in their current rectangular
-   arrangement, and can be rewritten to represent new arrangements for
-   different levels, if anyone feels so inclined to write them */
 class BlockHolder {
 	private int blockCount;
 	private Line[] lines;
@@ -268,7 +342,7 @@ class BlockHolder {
 		prepareBlocks();
 	}
 
-	/* Called when the game is lost, and the blocks are redrawn */
+	
 	public void restart() {
 		blockCount = 0;
 		for(int i = 0; i < lines.length; i++) {
@@ -277,13 +351,10 @@ class BlockHolder {
 		}
 	}
 
-	/* prepareBlocks() is called by the BlockHolder constructor, and 
-	   prepares all the lines of blocks to be drawn, by initializing
-	   each line with the proper hight and colors of blocks. */
+
 	public void prepareBlocks() {
 		int spacing = Breakout.BLOCKSPACINGY;
 		lines[0] = new Line(0, Breakout.randomColorGen());
-		lines[0] = new Line(0,  Breakout.randomColorGen());
 		lines[1] = new Line(TARGETHEIGHT+spacing, Breakout.randomColorGen());
 		lines[2] = new Line(TARGETHEIGHT*2+2*spacing, Breakout.randomColorGen());
 		lines[3] = new Line(TARGETHEIGHT*3+3*spacing, Breakout.randomColorGen());
@@ -297,8 +368,7 @@ class BlockHolder {
 	}
 
 
-	/* Returns the block which is hit when a ball passes at a point of 
-	(x,y) */
+
 	public Block whohit(int x, int y) {
 		for(int i = 0; i < lines.length; i++) {
 			if(lines[i].bottom >= y && lines[i].top <= y) {
@@ -311,31 +381,27 @@ class BlockHolder {
 		return null;
 	}
 
-	/* Is called by the init method of the Breakout game to draw
-	   the blocks into the graphics buffer */
 	public void draw(Graphics g) {
 		for(int i = 0; i < lines.length; i++)
 			lines[i].draw(g);
 	}
 
-	/* Returns the number of blocks still unhit on the playing field */
+
 	public int blocksLeft() {
 		return blockCount;
 	}
 	
 }
 
-/* Representing a line of blocks on the screen, this class is used a lot
-   by BlockHolder */
+
 class Line {
 	public int bottom, top, numberblocks, initial;
 	public Block[] blocks;
 	private boolean[] exists;
 	private int TARGETLENGTH;
-	private Color color = Color.CYAN;
+	private Color color = Breakout.randomColorGen();
 
-	/* Prepares a Line of blocks, starting at hight top0, and
-	   with the color color0 */
+
 	public Line(int top0, Color color0) {
 		top = top0;
 		color = color0;
@@ -347,7 +413,7 @@ class Line {
 		exists = new boolean[numberblocks];
 	}
 	
-	/* Fills the line with its respective blocks */
+
 	public void fill() {
 		for(int i = 0; i < numberblocks; i++) {
 			blocks[i] = new Block(TARGETLENGTH * i + initial, top + 1, color);
@@ -361,7 +427,7 @@ class Line {
 		}
 	}
 
-	/* Draws the line onto the graphics buffer */
+
 	public void draw(Graphics g) {
 		for(int i = 0; i < numberblocks; i++) {
 			if(exists[i])
@@ -369,8 +435,7 @@ class Line {
 		}
 	}
 	
-	/* Used by the BlockHolder class to determine which block is 
-	   hit, whohit returns which block is within location x */
+
 	public Block whohit(int x) {
 		int numhit = (int) (x - initial) / TARGETLENGTH;
 		
@@ -386,15 +451,13 @@ class Line {
 	
 }
 
-/* Creates a block that can be drawn onto the graphics buffer. Also is
-   used as a parent for the paddle class, since most functions are the
-   same. */
+
 class Block {
 	public int x, y;
 	protected Color color = Breakout.randomColorGen();
 	protected int MAXX, MAXY;
 
-	/* Creates block starting at postition (x0, y0) of color color0 */
+
 	public Block(int x0, int y0, Color color0) {
 		x = x0;
 		y = y0;
@@ -403,22 +466,20 @@ class Block {
 		MAXY = Breakout.TARGETHEIGHT - Breakout.BLOCKSPACINGY / 2;
 	}
 
-	/* Erases the block, by making it the color of the background */
-	public void clear(Graphics g) {
-	/* Erases the block, by making it the color of the background and keeping score of each hit */
+
 	public void clearBlock(Graphics g) {
 		g.setColor(Breakout.BACKGROUND);
 		Breakout.score++;
 		g.fillRect(x, y, MAXX, MAXY);
 	}
 	
-	/* clears the paddle so as we move the previous position the paddle was in is now the background color */
+
 	public void clearPaddle(Graphics g) {
 		g.setColor(Breakout.BACKGROUND);
 		g.fillRect(x, y, MAXX, MAXY);
 	}
 
-	/* Draws the block onto g */
+
 	public void draw(Graphics g) {
 		g.setColor(color);
 		g.fillRect(x, y, MAXX, MAXY);
@@ -442,8 +503,7 @@ class Block {
 
 }
 	
-/* This class makes the paddle, it works similar to 
-   the block class, but also has movement methods */ 
+ 
 class Paddle extends Block {
 	public boolean moved = false;
 
@@ -456,13 +516,13 @@ class Paddle extends Block {
 
 	}
 
-	/* Place block on (x0, y0) */
+
 	public void go(int x0, int y0) {
 		x=x0;
 		y=y0;
 	}
 	
-	/* Move the block change places on the x axis */
+
 	public void move(int change) {
 		if((x+MAXX < Breakout.MAXX || change < 0) && (x > 0 || change > 0)) { 
 			x = x + change;
@@ -474,10 +534,7 @@ class Paddle extends Block {
 
 }
 
-/* This class creates the most important part to the Breakout game the ball, 
-   this class draws the ball, moves the ball  and also works with the BlockHolder to erase 
-   the blocks the ball hits.  */
-   
+
 class Ball {
 	public double xchange, ychange;
 	private double x, y;
@@ -486,8 +543,7 @@ class Ball {
 	private BlockHolder blocks;
 	private AudioClip beep;
 
-	/* Creates a ball in a design with a blocks0 BlockHolder and a 
-	   beeping noise of beep0. */
+
 	public Ball(BlockHolder blocks0, AudioClip beep0) {
 		xchange = 0;
 		ychange = 0;
@@ -506,8 +562,6 @@ class Ball {
 		ychange = 0.0;
 	}
 
-	/* Here the ball moves itself across the screen based on the position
-	   of the blocks and paddle */
 	public void selfMove(Graphics g, Block paddle, Breakout ap) {
 		if(x + xchange >= Breakout.MAXX)
 			xchange =- Math.abs(xchange);
@@ -535,15 +589,12 @@ class Ball {
 		move(xchange, ychange, g);
 	}
 
-	/* Moves the ball xchange in the x direction and ychange in the y
-	   direction */
 	public void move(double xchange, double ychange, Graphics g) {
 		x = x + xchange;
 		y = y + ychange;
 	}
 
-	/* Checks to see if the ball is about to hit a block, if so it 
-	   reverses the ychange variable and makes the beep noise */
+
 	public void checkBlocks(Graphics g) {
 		Block hit = blocks.whohit((int) (x + xchange), (int) (y + ychange));
 	
@@ -554,13 +605,13 @@ class Ball {
 		}
 	}
 
-	/* Erases the ball */
+
 	public void clear(Graphics g) {
 		g.setColor(Breakout.BACKGROUND);
 		g.fillOval((int) x, (int) y, radius * 2,radius * 2);
 	}
 
-	/* Draws the ball at its current position */
+
 	public void draw(Graphics g) {
 		g.setColor(color);
 		g.fillOval((int) x,(int) y, radius * 2, radius * 2);
