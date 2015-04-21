@@ -1,8 +1,14 @@
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.applet.*;
 import java.lang.Math;
 import java.net.InetAddress;
+import java.net.URL;
 import java.util.Random;
+import java.io.*;
+
+import sun.audio.*;
 
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -45,13 +51,10 @@ public class Breakout extends Applet implements Runnable {
 	private BlockHolder blocks;
 	private AudioClip hitsound;
 	private Paddle paddle;
-
-
+	
 	public void init() {
 		hitsound = getAudioClip(getDocumentBase(), BEEP_SOUND);
 		hitsound.play();
-		
-		
 		buffer = createImage(MAXX, MAXY);
 		gContext = buffer.getGraphics();
 		gContext.setColor(BACKGROUND);
@@ -62,6 +65,9 @@ public class Breakout extends Applet implements Runnable {
 		paddle.draw(gContext);
 		ball.draw(gContext);
 		blocks.draw(gContext);
+		new Sound(this);
+		Sound.backGround.loop();
+		
 	}
 
 	
@@ -102,6 +108,7 @@ public class Breakout extends Applet implements Runnable {
 		} catch(Exception e) {};
 
 		while(true) {
+			//Sound.backgroundMusic();
 			paddle.clearPaddle(gContext);
 			ball.clear(gContext);
 
@@ -249,6 +256,7 @@ public class Breakout extends Applet implements Runnable {
 		JOptionPane.showMessageDialog(null, scrollPane, "Cleveland State CIS Dept. Info",  
 		                                       JOptionPane.INFORMATION_MESSAGE);
 	}
+	
 	// where tips can be added to an array
 	public String[] tips(){
 		String[] s = new String[8];
@@ -328,12 +336,44 @@ s[0] = ("BSCIS Admission Requirements\n" +
 		int blue = rand.nextInt(255);
 		return new Color(red, green, blue);
 	}
+	
+	/*
+	public void colorCheck(){
+		Color[] colorA = new Color[10];
+		colorA[0] = BACKGROUND;
+		colorA[1] = PADDLECOLOR;
+		colorA[2] = TEXTCOLOR;
+		colorA[3] = BALLCOLOR;
+		colorA[4] = BlockHolder.lines[0].color;
+		colorA[5] = BlockHolder.lines[1].color;
+		colorA[6] = BlockHolder.lines[2].color;
+		colorA[7] = BlockHolder.lines[3].color;
+		colorA[8] = BlockHolder.lines[4].color;
+		colorA[9] = BlockHolder.lines[5].color;
+		for (int i = 0; i < colorA.length; i++){
+			for (int j = 0; j < colorA.length; j++){
+				if (i == j){
+					j++;
+				}
+				if (colorA[i] == colorA[j]){
+					colorA[i].darker();
+					colorA[j].brighter();
+					colorCheck();
+				}
+			}
+		}
+		
+	}*/
 }
 
+//**********************************************************************************************************************
+//**********************************************************************************************************************
+//**********************************************************************************************************************
+//**********************************************************************************************************************
 
 class BlockHolder {
 	private int blockCount;
-	private Line[] lines;
+	protected static Line[] lines;
 	private int TARGETHEIGHT;
 
 	public BlockHolder() {
@@ -393,13 +433,17 @@ class BlockHolder {
 	
 }
 
+//**********************************************************************************************************************
+//**********************************************************************************************************************
+//**********************************************************************************************************************
+//**********************************************************************************************************************
 
 class Line {
 	public int bottom, top, numberblocks, initial;
 	public Block[] blocks;
 	private boolean[] exists;
 	private int TARGETLENGTH;
-	private Color color = Breakout.randomColorGen();
+	Color color = Breakout.randomColorGen();
 
 
 	public Line(int top0, Color color0) {
@@ -451,6 +495,10 @@ class Line {
 	
 }
 
+//**********************************************************************************************************************
+//**********************************************************************************************************************
+//**********************************************************************************************************************
+//**********************************************************************************************************************
 
 class Block {
 	public int x, y;
@@ -503,6 +551,10 @@ class Block {
 
 }
 	
+//**********************************************************************************************************************
+//**********************************************************************************************************************
+//**********************************************************************************************************************
+//**********************************************************************************************************************
  
 class Paddle extends Block {
 	public boolean moved = false;
@@ -534,12 +586,16 @@ class Paddle extends Block {
 
 }
 
+//**********************************************************************************************************************
+//**********************************************************************************************************************
+//**********************************************************************************************************************
+//**********************************************************************************************************************
 
 class Ball {
 	public double xchange, ychange;
 	private double x, y;
 	private int radius;
-	private Color color = Breakout.randomColorGen();
+	private Color color = Breakout.BALLCOLOR;
 	private BlockHolder blocks;
 	private AudioClip beep;
 
@@ -616,4 +672,29 @@ class Ball {
 		g.setColor(color);
 		g.fillOval((int) x,(int) y, radius * 2, radius * 2);
 	}
+}
+
+//**********************************************************************************************************************
+//**********************************************************************************************************************
+//**********************************************************************************************************************
+//**********************************************************************************************************************
+
+class Sound extends Breakout{
+	
+	static AudioClip backGround, hit, miss, win, lose; // Sound player
+	URL url;
+	static Breakout bo;
+
+	// In order to get music to work use new Sound(this); and on next line use Sound.(sound wanting to play).play() or Loop()
+	public Sound(Breakout bo){
+		try {
+			url = bo.getDocumentBase();
+		}
+		catch(Exception e){
+		}
+		backGround = bo.getAudioClip(url, "Music/G3BackgroundMusic.au");
+		win = bo.getAudioClip(url, "Music/G3Win.au");
+	}
+	
+
 }
