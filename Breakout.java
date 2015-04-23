@@ -7,9 +7,7 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.util.Random;
 import java.io.*;
-
 import sun.audio.*;
-
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -710,7 +708,7 @@ class Sound extends Breakout{
 		hit = bo.getAudioClip(url, "Music/G3Hit.au");
 		endGame = bo.getAudioClip(url, "Music/G3EndGame.au");
 		listen = bo.getAudioClip(url, "Music/G3Info.au");
-		miss = bo.getAudioClip(url, "Music/GEMiss.au");
+		miss = bo.getAudioClip(url, "Music/G3Miss.au");
 	}
 	
 
