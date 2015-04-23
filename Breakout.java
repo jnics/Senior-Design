@@ -7,7 +7,9 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.util.Random;
 import java.io.*;
+
 import sun.audio.*;
+
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -61,16 +63,9 @@ public class Breakout extends Applet implements Runnable {
 		paddle.draw(gContext);
 		ball.draw(gContext);
 		blocks.draw(gContext);
-		if (games < 0){
-			Sound.endGame.stop();
-			new Sound(this);
-			Sound.backGround.loop();
-		}
-		else{
-			new Sound(this);
-			Sound.backGround.loop();
-		}
-		games++;
+		new Sound(this);
+		Sound.backGround.loop();
+
 	}
 
 	
@@ -96,6 +91,11 @@ public class Breakout extends Applet implements Runnable {
 		try {
 			colorCheck();
 			g.drawImage(buffer, 0, 0, MAXX, MAXY, this);
+			if(games < 0){
+				Sound.endGame.stop();
+				Sound.backGround.loop();
+			}
+			games++;
 		}
 		catch(Exception e) {}
 	}
@@ -156,13 +156,13 @@ public class Breakout extends Applet implements Runnable {
 		if(key == 112) {
 			if(!paused) {
 				paused = true;
-				animate.suspend();
+				//animate.suspend();
 				showStatus("Press P to unpause Score: " + Breakout.score);
 			}
 			else {
 				showStatus("Press P to pause Score: " + Breakout.score);
 				paused = false;
-				animate.resume();
+				//animate.resume();
 			}	
 		}
 		if(key == 1006)
@@ -190,7 +190,6 @@ public class Breakout extends Applet implements Runnable {
 		animate.stop();
 		Sound.backGround.stop();
 		Sound.win.play();
-		Sound.endGame.loop();
 		tipWindow(tips());
 		score = 0;
 	}
@@ -219,18 +218,16 @@ public class Breakout extends Applet implements Runnable {
 			blocks.draw(gContext);
 			ballready = true;
 			Sound.miss.play();
+			Sound.backGround.stop();
+			Sound.endGame.play();
 			tipWindow(tips());
-			
-
 			score = 0;
 		}
 	}
 	
 	// Message box to display tips
 	public void tipWindow(String[] s){
-		Sound.backGround.stop();
 		Sound.listen.play();
-		Sound.endGame.loop();
 		JTextArea text = new JTextArea();
 		if(score >= 0 && score < 10){
 			text = new JTextArea(s[0] + "\n" + s[1] +  "\n" + s[2] + "\n" + s[3]);
@@ -706,7 +703,7 @@ class Sound extends Breakout{
 		backGround = bo.getAudioClip(url, "Music/G3BackgroundMusic.au");
 		win = bo.getAudioClip(url, "Music/G3WinMusic.au");
 		hit = bo.getAudioClip(url, "Music/G3Hit.au");
-		endGame = bo.getAudioClip(url, "Music/G3EndGame.au");
+		endGame = bo.getAudioClip(url, "Music/smb_gameover.au");
 		listen = bo.getAudioClip(url, "Music/G3Info.au");
 		miss = bo.getAudioClip(url, "Music/G3Miss.au");
 	}
