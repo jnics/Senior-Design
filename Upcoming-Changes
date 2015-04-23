@@ -1,7 +1,3 @@
-Notice when someone wins
-make so the initial window fits the game
-make sure that game changes size as window does
-make a drawing board to the side of the game that will follow score
-add a window so when game is over it pops up with tips
-make a method that checks to see if any of the colors are the same and if so it makes one brighter and one darker then rechecks colors
-add sounds on a win maybe a hit a loss of life and any other event that may occur that sound could add to the game. 
+Commit round rect changes
+make sure that miss audio gets added in
+get end game music to work properly
