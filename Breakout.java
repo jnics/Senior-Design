@@ -49,7 +49,6 @@ public class Breakout extends Applet implements Runnable {
 	private boolean leftArrow = false, rightArrow = false, ballready = true;
 	private Ball ball;
 	private BlockHolder blocks;
-	private AudioClip hitsound;
 	private Paddle paddle;
 	private int games = 0;
 	
@@ -201,8 +200,7 @@ public class Breakout extends Applet implements Runnable {
 
 	public void lose() {
 		if(numberlost < LIVES) {
-			//new Sound(this);
-			//Sound.miss.play();
+			Sound.miss.play();
 			numberlost++;
 			showStatus("Try Again. Your score was: " + score);
 			gContext.setColor(Breakout.BACKGROUND);
@@ -222,8 +220,9 @@ public class Breakout extends Applet implements Runnable {
 			blocks.restart();
 			blocks.draw(gContext);
 			ballready = true;
+			Sound.miss.play();
 			tipWindow(tips());
-			//Sound.miss.play();
+			
 
 			score = 0;
 		}
@@ -711,7 +710,7 @@ class Sound extends Breakout{
 		hit = bo.getAudioClip(url, "Music/G3Hit.au");
 		endGame = bo.getAudioClip(url, "Music/G3EndGame.au");
 		listen = bo.getAudioClip(url, "Music/G3Info.au");
-		//miss = 
+		miss = bo.getAudioClip(url, "Music/GEMiss.au");
 	}
 	
 
