@@ -7,7 +7,9 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.util.Random;
 import java.io.*;
+
 import sun.audio.*;
+
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -35,7 +37,7 @@ public class Breakout extends Applet implements Runnable {
 		XHIT_CHANGE = 0.4, YHIT_CHANGE = 0.2;
 	public static final Color PADDLECOLOR = randomColorGen(), 
 		BALLCOLOR = randomColorGen();
-	public static final Color BACKGROUND = randomColorGen(), TEXTCOLOR = randomColorGen();
+	public static final Color BACKGROUND = randomColorGen();
 	public static final String BEEP_SOUND = "beep.au"; 
 
 	private boolean paused = false;
@@ -49,23 +51,29 @@ public class Breakout extends Applet implements Runnable {
 	private BlockHolder blocks;
 	private AudioClip hitsound;
 	private Paddle paddle;
+	private int games = 0;
 	
 	public void init() {
-		hitsound = getAudioClip(getDocumentBase(), BEEP_SOUND);
-		hitsound.play();
 		buffer = createImage(MAXX, MAXY);
 		gContext = buffer.getGraphics();
 		gContext.setColor(BACKGROUND);
 		blocks = new BlockHolder();
 		paddle = new Paddle();
-		ball = new Ball(blocks, hitsound);
+		ball = new Ball(blocks);
 		gContext.fillRect(0, 0, MAXX, MAXY);
 		paddle.draw(gContext);
 		ball.draw(gContext);
 		blocks.draw(gContext);
-		new Sound(this);
-		Sound.backGround.loop();
-		
+		if (games < 0){
+			Sound.endGame.stop();
+			new Sound(this);
+			Sound.backGround.loop();
+		}
+		else{
+			new Sound(this);
+			Sound.backGround.loop();
+		}
+		games++;
 	}
 
 	
@@ -89,10 +97,7 @@ public class Breakout extends Applet implements Runnable {
 	public void paint(Graphics g) {
 		super.paint(g);
 		try {
-			/*Toolkit toolkit =  Toolkit.getDefaultToolkit ();
-			Dimension dim = toolkit.getScreenSize();
-			MAXX = (int) dim.getWidth();
-			MAXY = (int) dim.getHeight();*/
+			colorCheck();
 			g.drawImage(buffer, 0, 0, MAXX, MAXY, this);
 		}
 		catch(Exception e) {}
@@ -100,13 +105,11 @@ public class Breakout extends Applet implements Runnable {
 
 	
 	public void run() {
-		//showStatus("Click on Field to Play");
 		try {
-                   showStatus(InetAddress.getLocalHost().toString());
+			showStatus(InetAddress.getLocalHost().toString());
 		} catch(Exception e) {};
 
 		while(true) {
-			//Sound.backgroundMusic();
 			paddle.clearPaddle(gContext);
 			ball.clear(gContext);
 
@@ -188,6 +191,9 @@ public class Breakout extends Applet implements Runnable {
 		gContext.fillRect(0,0,MAXX,MAXY);
 		repaint();
 		animate.stop();
+		Sound.backGround.stop();
+		Sound.win.play();
+		Sound.endGame.loop();
 		tipWindow(tips());
 		score = 0;
 	}
@@ -195,6 +201,8 @@ public class Breakout extends Applet implements Runnable {
 
 	public void lose() {
 		if(numberlost < LIVES) {
+			//new Sound(this);
+			//Sound.miss.play();
 			numberlost++;
 			showStatus("Try Again. Your score was: " + score);
 			gContext.setColor(Breakout.BACKGROUND);
@@ -215,12 +223,17 @@ public class Breakout extends Applet implements Runnable {
 			blocks.draw(gContext);
 			ballready = true;
 			tipWindow(tips());
+			//Sound.miss.play();
+
 			score = 0;
 		}
 	}
 	
 	// Message box to display tips
 	public void tipWindow(String[] s){
+		Sound.backGround.stop();
+		Sound.listen.play();
+		Sound.endGame.loop();
 		JTextArea text = new JTextArea();
 		if(score >= 0 && score < 10){
 			text = new JTextArea(s[0] + "\n" + s[1] +  "\n" + s[2] + "\n" + s[3]);
@@ -261,13 +274,13 @@ public class Breakout extends Applet implements Runnable {
 
 s[0] = ("BSCIS Admission Requirements\n" +
 		        
+	">Firstly congratulations from group 3 on getting the a score of " + score + "\n" +
+	">Students may declare CIS as their major as soon as they have met the program’s admission requirements:\n\t"+
 
-	">Students may declare CIS as their major as soon as they have met the program’s admission requirements:\n"+
-
-	">A 2.0 grade point average overall.\n "+
-	">A grade of C or better in MTH 181, or an average of C+ in MTH 148-149.\n "+
-	">A grade of C+ or better in CIS 260.\n"+
-	">Submit an official Declaration of Major form in the Office of Undergraduate Advising, BU 219.\n"+
+	">A 2.0 grade point average overall.\n\t "+
+	">A grade of C or better in MTH 181, or an average of C+ in MTH 148-149.\n\t "+
+	">A grade of C+ or better in CIS 260.\n\t"+
+	">Submit an official Declaration of Major form in the Office of Undergraduate Advising, BU 219.\n\t"+
 	">The curriculum reflects current computing trends and incorporates current topics to enable a CIS graduate to be competitive in the marketplace\n\n");
 
 
@@ -287,19 +300,19 @@ s[0] = ("BSCIS Admission Requirements\n" +
 		s[3] = ("Careers you can peruse with a CIS & IST degree Part 1\n"+
                
 
-               "	Application Developer\n"+
+               "	Application Developer\n\t"+
                	"Digital Energy ERP Project Manager\n"+
 			   "	IT Consultant\n"+
-			   "	IT Support Specialist\n"+
+			   "	IT Support Specialist\n\t"+
 			   	"Programmer/Analyst\n");
 			 
 
 		s[4] = ("Careers you can peruse with a CIS & IST degree Part 2\n"+
-               " ______________________________________________\n\n"+
-			   	"Project Manager\n"+
-			   	"Quality Assurance Specialist\n"+
-		       	"Setup Configuration Specialist\n"+
-			   	"Information Management Leadership Program\n"+
+               " ______________________________________________\n\n\t"+
+			   	"Project Manager\n\t"+
+			   	"Quality Assurance Specialist\n\t"+
+		       	"Setup Configuration Specialist\n\t"+
+			   	"Information Management Leadership Program\n\t"+
 			   	"Infrastructure Architect\n");
 
 
@@ -335,33 +348,37 @@ s[0] = ("BSCIS Admission Requirements\n" +
 		return new Color(red, green, blue);
 	}
 	
-	/*
+	
 	public void colorCheck(){
-		Color[] colorA = new Color[10];
+		Color[] colorA = new Color[9];
 		colorA[0] = BACKGROUND;
 		colorA[1] = PADDLECOLOR;
-		colorA[2] = TEXTCOLOR;
-		colorA[3] = BALLCOLOR;
-		colorA[4] = BlockHolder.lines[0].color;
-		colorA[5] = BlockHolder.lines[1].color;
-		colorA[6] = BlockHolder.lines[2].color;
-		colorA[7] = BlockHolder.lines[3].color;
-		colorA[8] = BlockHolder.lines[4].color;
-		colorA[9] = BlockHolder.lines[5].color;
-		for (int i = 0; i < colorA.length; i++){
-			for (int j = 0; j < colorA.length; j++){
-				if (i == j){
-					j++;
-				}
-				if (colorA[i] == colorA[j]){
-					colorA[i].darker();
-					colorA[j].brighter();
-					colorCheck();
+		colorA[2] = BALLCOLOR;
+		colorA[3] = BlockHolder.lines[0].color;
+		colorA[4] = BlockHolder.lines[1].color;
+		colorA[5] = BlockHolder.lines[2].color;
+		colorA[6] = BlockHolder.lines[3].color;
+		colorA[7] = BlockHolder.lines[4].color;
+		colorA[8] = BlockHolder.lines[5].color;
+		try {
+			for (int i = 0; i < colorA.length; i++){
+				for (int j = 0; j < colorA.length; j++){
+					if (i == j){
+						j++;
+						if (j == colorA.length){
+							break;
+						}
+					}
+					if (colorA[i].getRGB() == colorA[j].getRGB()){
+						colorA[i] = colorA[i].darker();
+						colorA[i] = colorA[j].brighter();
+						colorCheck();
+					}
 				}
 			}
 		}
-		
-	}*/
+		catch(Exception e){}	
+	}
 }
 
 //**********************************************************************************************************************
@@ -595,10 +612,10 @@ class Ball {
 	private int radius;
 	private Color color = Breakout.BALLCOLOR;
 	private BlockHolder blocks;
-	private AudioClip beep;
 
 
-	public Ball(BlockHolder blocks0, AudioClip beep0) {
+
+	public Ball(BlockHolder blocks0) {
 		xchange = 0;
 		ychange = 0;
 		radius = Breakout.BALLSIZE;
@@ -606,7 +623,6 @@ class Ball {
 		y = Breakout.PADDLEALTITUDE - 5;
 		color = Breakout.BALLCOLOR;
 		blocks = blocks0;
-		beep = beep0;
 	}
 
 	public void go(int x0, int y0) {
@@ -654,7 +670,7 @@ class Ball {
 	
 		if(hit != null) {
 			hit.clearBlock(g);
-			beep.play();
+			Sound.hit.play();
 			ychange = -ychange;
 		}
 	}
@@ -679,7 +695,7 @@ class Ball {
 
 class Sound extends Breakout{
 	
-	static AudioClip backGround, hit, miss, win, lose; // Sound player
+	static AudioClip backGround, hit, miss, win, endGame, listen; // Sound player
 	URL url;
 	static Breakout bo;
 
@@ -691,7 +707,11 @@ class Sound extends Breakout{
 		catch(Exception e){
 		}
 		backGround = bo.getAudioClip(url, "Music/G3BackgroundMusic.au");
-		win = bo.getAudioClip(url, "Music/G3Win.au");
+		win = bo.getAudioClip(url, "Music/G3WinMusic.au");
+		hit = bo.getAudioClip(url, "Music/G3Hit.au");
+		endGame = bo.getAudioClip(url, "Music/G3EndGame.au");
+		listen = bo.getAudioClip(url, "Music/G3Info.au");
+		//miss = 
 	}
 	
 
